@@ -1,0 +1,25 @@
+# dependencies
+/photostudio/node_modules
+/photostudio/.pnp
+/photostudio/.pnp.js
+
+# testing
+/photostudio/coverage
+
+# production
+/photostudio/build
+
+# misc
+/photostudio/.DS_Store
+/photostudio/.env.local
+/photostudio/.env.development.local
+/photostudio/.env.test.local
+/photostudio/.env.production.local
+
+/photostudio/npm-debug.log*
+/photostudio/yarn-debug.log*
+/photostudio/yarn-error.log*
+
+
+/backend/node_modules
+/backend/config
