@@ -1,0 +1,27 @@
+@import '../../style/variables.scss';
+
+.header{
+    padding: 20px 140px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &__logo{
+        font-style: normal;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 42px;
+        color: $dark-text;
+    }
+    &__links{
+        display: flex;
+        gap: 40px;
+        @extend %link;
+    }
+    &__link{
+        color: $dark-text;
+        &_active, &:hover{
+            color: $light-text;
+        }
+    }
+}

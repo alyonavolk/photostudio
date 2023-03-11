@@ -1,12 +1,40 @@
 import { useState, useEffect } from 'react';
-import {Route, Router, Switch} from 'react-router-dom';
 import './app.scss';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Header from '../Header/Header';
+
+import { ROUTES } from '../../resources/Routes';
+import Orders from '../Orders/Orders';
 
 function App() {
   
   return (
     <Router>
-      <div className="App">
+      <div className="app">
+        <Header />
+        <Switch>
+          <Route exact path={ROUTES.orders}>
+            <div className='app__section'>
+              <Orders />
+            </div>
+          </Route>
+          <Route exact path={ROUTES.customer}>
+            <div className='app__section'>
+            </div>
+          </Route>
+          <Route exact path={ROUTES.typeServices}>
+            <div className='app__section'>
+            </div>
+          </Route>
+          <Route exact path={ROUTES.cheque}>
+            <div className='app__section'>
+            </div>
+          </Route>
+          <Route exact path={ROUTES.rate}>
+            <div className='app__section'>
+            </div>
+          </Route>
+        </Switch>
       </div>
     </Router>
   );
