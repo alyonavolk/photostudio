@@ -1,0 +1,35 @@
+@import '../../style/variables.scss';
+
+.modalResults{
+    width: 500px;
+    height: 300px;
+    padding: 20px 10px;
+    background-color: $light-back;
+    border-radius: 20px;
+    &__header{
+        position: relative;
+        h3 {
+            @extend %link-order;
+            text-align: center;
+        }
+        button {
+            position: absolute;
+            margin: 0;
+            top: 0;
+            right: 10px;
+        }
+    }
+    &__content{
+        @extend %link-order;
+        &_date{
+            padding: 30px 5% 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 5%;
+    }
+}

@@ -1,0 +1,25 @@
+@import '../../../style/variables.scss';
+
+.btn{
+    @extend %link-order;
+    color: $text;
+    cursor: pointer;
+    &__empty{
+        border: 0px;
+        background-color: inherit;
+        margin: 5%;
+        &:hover{
+            color: $light-text;
+        }
+    }
+    &__prim{
+        border: 1px solid $main-color;
+        background-color: $main-color;
+        padding: 6px 10px;
+        border-radius: 10px;
+        &:hover, &_active{
+            background-color: $light-back;
+            color: $light-text;
+        }
+    }
+}

@@ -3,14 +3,22 @@ const Controller = require('../controller/controller');
 
 const router = express.Router();
 
+router.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 router.get('/', Controller.getOrders);
 router.get('/order/:id', Controller.getOrder);
 router.get('/readyOrders', Controller.getReadyOrders);
 router.get('/orderOrders', Controller.getOrderOrders);
+router.get('/currentDayOrders', Controller.getCurrentDayOrders);
 
 
-router.post('/currentDayOrders', Controller.postCurrentDayOrders);
 router.post('/customerOrder', Controller.postCustomerOrder);
+router.post('/delete/:id', Controller.deleteRow);
+router.post('/selectReport', Controller.selectReport);
 
 router.post('/addOrder', Controller.addOrder);
 router.post('/addTypeServices', Controller.addTypeServices);
