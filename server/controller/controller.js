@@ -10,9 +10,9 @@ class Controller {
     }
 
     async getOrder(req, res) {
-        const id = req.params.id;
+        const id = req.body.id;
 
-        await connection.query('SELECT * FROM `order` WHERE `id_order` = ?', id, function (error, results) {
+        await connection.query('SELECT * FROM `order`, `typeservices`, `cheque`, `customer`, `rate` WHERE `order`.cheque_id=`cheque`.id_cheque AND `order`.customer_id=? AND `customer`.id_customer=? AND `cheque`.services_id=`typeservices`.id_services AND `cheque`.rate_id=`rate`.id_rate', [id, id], function (error, results) {
             if (error) throw error;
             console.log('The order is: ', results);
             res.send(results);
@@ -116,7 +116,7 @@ class Controller {
         const result = req.body;
         console.log(result);
 
-        await connection.query(`DELETE FROM ${result.table} WHERE id_${result.table}=${result.id}`,
+        await connection.query('DELETE FROM ?? WHERE ??=?', [result.table, result.row, result.id],
             function (error, results) {
                 if (error) throw error;
                 console.log('The delete is: ', results.table, result.id);
@@ -126,7 +126,7 @@ class Controller {
 
     async selectReport(req, res) {
         const date = req.body;
-        
+
         await connection.query('SELECT COUNT(`order`.id_order) AS totalOrders,  SUM(cheque.сh_price) AS totalPrice, SUM(typeservices.s_numberImages) AS totalImages FROM `order`, `typeservices`, `cheque` WHERE `order`.cheque_id=cheque.id_cheque AND cheque.services_id=typeservices.id_services AND DATE(`order`.`o_dateCompletion`)>? AND DATE(`order`.`o_dateCompletion`)<?', [date.after, date.before],
             function (error, results) {
                 if (error) throw error;

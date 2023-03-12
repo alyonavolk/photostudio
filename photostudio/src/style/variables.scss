@@ -47,6 +47,20 @@ $color-img: #815F51;
     color: $dark-text;
 }
 
+%modalHeader{
+    position: relative;
+    h3 {
+        @extend %link-order;
+        text-align: center;
+    }
+    button {
+        position: absolute;
+        margin: 0;
+        top: 0;
+        right: 10px;
+    }
+}
+
 /*основной текст на страницах*/
 %mainText {
     font-weight: 500;

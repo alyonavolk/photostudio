@@ -16,8 +16,8 @@ const ModalResults = ({close, content, dateAfter, dateBefore, totalOrders, total
                     <p>по {dateBefore}</p>
                 </div>
                 <p>Всего заказов поступило: {totalOrders}</p>
-                <p>Отпечатано снимков: {totalPrice}</p>
-                <p>Общая сумма заказа: {totalImages}</p>
+                <p>Отпечатано снимков: {totalPrice === null ? '0' : totalPrice}</p>
+                <p>Общая сумма заказа: {totalImages === null ? '0' : totalImages}</p>
             </div>
         </div>
     );

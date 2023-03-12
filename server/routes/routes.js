@@ -10,14 +10,14 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', Controller.getOrders);
-router.get('/order/:id', Controller.getOrder);
+// router.get('/order/:id', Controller.getOrder);
 router.get('/readyOrders', Controller.getReadyOrders);
 router.get('/orderOrders', Controller.getOrderOrders);
 router.get('/currentDayOrders', Controller.getCurrentDayOrders);
 
-
+router.post('/order', Controller.getOrder);
 router.post('/customerOrder', Controller.postCustomerOrder);
-router.post('/delete/:id', Controller.deleteRow);
+router.post('/delete', Controller.deleteRow);
 router.post('/selectReport', Controller.selectReport);
 
 router.post('/addOrder', Controller.addOrder);

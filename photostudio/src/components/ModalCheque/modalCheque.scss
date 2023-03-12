@@ -1,22 +1,17 @@
 @import '../../style/variables.scss';
 
-.modalResults{
+.modalCheque{
     width: 500px;
-    height: 300px;
+    height: 580px;
     padding: 20px 10px;
     background-color: $light-back;
     border-radius: 20px;
     &__header{
         @extend %modalHeader;
+        padding-bottom: 30px; 
     }
     &__content{
         @extend %link-order;
-        &_date{
-            padding: 30px 5% 10px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
         display: flex;
         flex-direction: column;
         gap: 20px;
