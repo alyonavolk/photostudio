@@ -1,18 +1,35 @@
+import { useEffect, useState } from 'react';
 import './modalChangeOrder.scss';
 import Button from '../subComponents/Button/Button';
-import { useState } from 'react';
 
-import { api } from '../../resources/config'
+import { api } from '../../resources/config';
+import { defOrderChange } from '../../resources/defaultObject';
+import { MODAL } from '../../resources/Routes';
 
-const ModalChangeOrder = ({close, content, getOrders, ...data}) => {
-    // const [selectReadiness, setSelectReadiness] = useState(data.o_readiness);
-    // const [selectIssuing, setSelectIssuing] = useState(data.o_issuingOrder);
+const ModalChangeOrder = ({close, content, id, modal, getOrders}) => {
+    const [orderChange, setOrderChange] = useState(defOrderChange);
+
     const [selectReadiness, setSelectReadiness] = useState(0);
     const [selectIssuing, setSelectIssuing] = useState(0);
 
+    useEffect(() => {
+        modal === MODAL.change ? getOrderChange(id) : console.log();
+    }, [modal, id]);
+
+    const getOrderChange = async (id) => {
+        await api.post('/orderChange', { id: id})
+        .then(res => {
+            console.log(res.data[0]);
+            setOrderChange(res.data[0]);
+            setSelectReadiness(0);
+            setSelectIssuing(0);
+        })
+        .catch(err => console.log(err))
+    }
+
     const updateOrder = async () => {
-        const res = await api.post('/change', { id: data.id_order, readiness: selectReadiness, issuing: selectIssuing });
-        console.log(res.data);
+        await api.post('/change', { id: id, readiness: selectReadiness, issuing: selectIssuing })
+        .then(res => console.log('update res: ', res.data));
         close();
         await getOrders();
     }
@@ -20,22 +37,21 @@ const ModalChangeOrder = ({close, content, getOrders, ...data}) => {
     return (
         <div className='modalChange' onClick={content}>
             <div className='modalChange__header'>
-                <h3>Номер заказа: </h3>
+                <h3>Номер заказа: {orderChange.id_order}</h3>
                 <Button mix='empty' onClick={close}>
                     &#10008;
                 </Button>
             </div>
             <div className='modalChange__content'>
-                <p>ID чека: {data.id_order}</p>
-                <p>ФИО заказчика: {data.c_fio}</p>
-                <p>Дата заказа: {data.o_dataOrder}</p>
-                <p>Дата выполнения: {data.o_dateCompletion}</p>
+                <p>ID чека: <span>{orderChange.cheque_id}</span></p>
+                <p>ФИО заказчика: <span>{orderChange.c_fio}</span></p>
+                <p>Дата заказа: <span>{orderChange.o_dataOrder.slice(0, 10) + " " + orderChange.o_dataOrder.slice(12, 19)}</span></p>
+                <p>Дата выполнения: <span>{orderChange.o_dateCompletion.slice(0, 10) + " " + orderChange.o_dateCompletion.slice(12, 19)}</span></p>
                 <p>Готовность: </p>
                 <select className='modalChange__select' value={selectReadiness} onChange={(e) => setSelectReadiness(e.target.value)} >
                     <option value={0}>Нет</option>
                     <option value={1}>Да</option>
                 </select>
-                {console.log(selectReadiness)}
                 <p>Выдача заказа: </p>
                 <select className='modalChange__select' value={selectIssuing} onChange={(e) => setSelectIssuing(e.target.value)} >
                     <option value={0}>Нет</option>

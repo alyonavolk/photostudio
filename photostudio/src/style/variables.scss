@@ -31,6 +31,9 @@ $color-img: #815F51;
     font-size: 20px;
     line-height: 26px;
     color: $link-text;
+    span{
+        color: $light-text;
+    }
 }
 
 %table-title{

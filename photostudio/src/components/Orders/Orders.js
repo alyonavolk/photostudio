@@ -9,20 +9,25 @@ import change from '../../resources/img/change.svg';
 import del from '../../resources/img/del.svg';
 
 import { api } from '../../resources/config';
-import { LIST } from '../../resources/Routes';
-import { defOrderCustomer, defResult, defOrderChange } from '../../resources/defaultObject';
+import { LIST, MODAL } from '../../resources/Routes';
 import ModalResults from '../ModalResults/ModalResults';
 import ModalCheque from '../ModalCheque/ModalCheque';
 import ModalChangeOrder from '../ModalChangeOrder/ModalChangeOrder';
+import ModalAddRow from '../ModalAddRow/ModalAddRow';
 import Pagination from '../subComponents/Pagination/Pagination';
 
 const Orders = () => {
     const [searchName, setSearchName] = useState('');
     const [orders, setOrders] = useState([]);
     const [activeList, setActiveList] = useState(LIST.all);
+
     useEffect(() => {
         getOrders();
     }, []);
+
+
+    const [id, setId] = useState(0);
+    const [modal, setModal] = useState(MODAL.none);
 
     const [currentPage, setCurrentPage] = useState(1);
     const OrdersPerPage = 5;
@@ -33,14 +38,6 @@ const Orders = () => {
     const paginate = page => {
         setCurrentPage(page);
     }
-    const [modalCheque, setModalCheque] = useState(false);
-    const [orderCustomer, setOrderCustomer] =  useState(defOrderCustomer);
-
-    const [modalChange, setModalChange] = useState(false);
-    const [orderChange, setOrderChange] = useState(defOrderChange);
-
-    const [modalResult, setModalResult] = useState(false);
-    const [result, setResult] =  useState(defResult);
 
     const regDate = /\d{4}(-)\d{2}\1\d{2}/;
 
@@ -51,18 +48,9 @@ const Orders = () => {
         },
         validationSchema: Yup.object({
             dateAfter: Yup.string().matches(regDate, 'Неверно введена дата').required('Введите дату'),
-            dateBefore: Yup.string().required('Введите дату'),
+            dateBefore: Yup.string().matches(regDate, 'Неверно введена дата').required('Введите дату'),
         }),
-        onSubmit: async () => {
-            await api.post('/selectReport', {
-                after: formik.values.dateAfter,
-                before: formik.values.dateBefore
-            }).then((data) => {
-                console.log(data.data);
-                setResult(data.data[0]);
-                setModalResult(true);
-            })
-        }
+        onSubmit: () => setModal(MODAL.result)
     })
 
     const getOrders = async () => {
@@ -106,22 +94,6 @@ const Orders = () => {
         await getOrders();
     }
 
-    const getOrderCustomer = async (id) => {
-        const res = await api.post('/order', { id: id});
-        console.log(res.data);
-        setOrderCustomer(res.data[0]);
-        setModalCheque(true);
-    }
-
-    const getOrderChange = async (id) => {
-        const res = await api.post('/orderChange', { id: id})
-        .then(res => {
-            console.log(res.data[0]);
-            setOrderChange(res.data[0]);
-            setModalChange(true);
-        })
-        .catch(err => console.log(err))
-    }
     
 
     return (
@@ -169,7 +141,9 @@ const Orders = () => {
                             <th>Дата выполнения</th>
                             <th>Готовность</th>
                             <th>Выдача заказа</th>
-                            <th>+</th>
+                            <th onClick={() => setModal(MODAL.addOrder)} >
+                                +
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,11 +176,11 @@ const Orders = () => {
                                 </td>
                                 <td>
                                     <Button mix='empty'
-                                    onClick={() => getOrderCustomer(res.id_order)}>
+                                    onClick={() => { setId(res.id_order); setModal(MODAL.cheque) }}>
                                         <img src={list} alt=''/>
                                     </Button>
                                     <Button mix='empty'
-                                    onClick={() => getOrderChange(res.id_order)}>
+                                    onClick={() => {setId(res.id_order); setModal(MODAL.change)}}>
                                         <img src={change} alt=''/>
                                     </Button>
                                     <Button mix='empty' 
@@ -227,7 +201,7 @@ const Orders = () => {
                 </div>
             </div>
             <div className='orders__report'>
-                <Button mix='prim' onClick={formik.handleSubmit}>
+                <Button type='submit' mix='prim' onClick={formik.handleSubmit}>
                     Составить отчет
                 </Button>
                 <div className='orders__report_input'>
@@ -255,44 +229,35 @@ const Orders = () => {
                     {formik.touched.dateBefore && formik.errors.dateBefore ? <div className='orders__input_error'>{formik.errors.dateBefore}</div> : null}
                 </div>
             </div>
-            <div className={`orders__modal ${modalResult ? 'orders__modal_active' : 'orders__modal_close'}`} 
-                onClick={() => setModalResult(false)}>
-                <ModalResults close={() => setModalResult(false)}
+            <div className={`orders__modal ${modal === MODAL.result ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModal(MODAL.none)}>
+                <ModalResults close={() => setModal(MODAL.none)}
                     content={(e) => e.stopPropagation()}
                     dateAfter={formik.values.dateAfter} 
                     dateBefore={formik.values.dateBefore}
-                    totalOrders={result.totalOrders}
-                    totalPrice={result.totalPrice}
-                    totalImages={result.totalImages}/>
+                    modal={modal}
+                    />
             </div>
-            <div className={`orders__modal ${modalCheque ? 'orders__modal_active' : 'orders__modal_close'}`} 
-                onClick={() => setModalCheque(false)}>
-                    <ModalCheque close={() => setModalCheque(false)}
+            <div className={`orders__modal ${modal === MODAL.cheque ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModal(MODAL.none)}>
+                    <ModalCheque close={() => setModal(MODAL.none)}
                         content={(e) => e.stopPropagation()}
-                        id_order={orderCustomer.id_order}
-                        c_fio={orderCustomer.c_fio}
-                        c_telephone={orderCustomer.c_telephone}
-                        cheque_id={orderCustomer.cheque_id}
-                        s_name={orderCustomer.s_name}
-                        r_name={orderCustomer.r_name}
-                        сh_price={orderCustomer.сh_price}
-                        o_dataOrder={orderCustomer.o_dataOrder.slice(0, 10) + " " + orderCustomer.o_dataOrder.slice(12, 19)}
-                        o_dateCompletion={orderCustomer.o_dateCompletion.slice(0, 10) + " " + orderCustomer.o_dateCompletion.slice(12, 19)}
-                        o_readiness={orderCustomer.o_readiness.data[0] === 0 ? 'Нет' : 'Да'}
-                        o_issuingOrder={orderCustomer.o_issuingOrder.data[0] === 0 ? 'Нет' : 'Да'}
+                        id={id} modal={modal}
                         />
             </div>
-            <div className={`orders__modal ${modalChange ? 'orders__modal_active' : 'orders__modal_close'}`} 
-                onClick={() => setModalChange(false)}>
-                    <ModalChangeOrder close={() => setModalChange(false)}
+            <div className={`orders__modal ${modal === MODAL.change ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModal(MODAL.none)}>
+                    <ModalChangeOrder close={() => setModal(MODAL.none)}
                         content={(e) => e.stopPropagation()}
+                        id={id} modal={modal}
                         getOrders={getOrders}
-                        id_order={orderChange.id_order}
-                        c_fio={orderChange.c_fio}
-                        o_dataOrder={orderChange.o_dataOrder.slice(0, 10) + " " + orderChange.o_dataOrder.slice(12, 19)}
-                        o_dateCompletion={orderChange.o_dateCompletion.slice(0, 10) + " " + orderChange.o_dateCompletion.slice(12, 19)}
-                        o_readiness={orderChange.o_readiness.data[0]}
-                        o_issuingOrder={orderChange.o_issuingOrder.data[0]}
+                        />
+            </div>
+            <div className={`orders__modal ${modal === MODAL.addOrder ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModal(MODAL.none)}>
+                    <ModalAddRow close={() => setModal(MODAL.none)}
+                        content={(e) => e.stopPropagation()}
+                        modal={modal} getOrders={getOrders}
                         />
             </div>
         </div>

@@ -12,7 +12,7 @@ class Controller {
     async getOrder(req, res) {
         const id = req.body.id;
 
-        await connection.query('SELECT * FROM `order`, `typeservices`, `cheque`, `customer`, `rate` WHERE `order`.cheque_id=`cheque`.id_cheque AND `order`.customer_id=? AND `customer`.id_customer=? AND `cheque`.services_id=`typeservices`.id_services AND `cheque`.rate_id=`rate`.id_rate', [id, id], function (error, results) {
+        await connection.query(`SELECT * FROM \`order\`, \`typeservices\`, \`cheque\`, \`customer\`, \`rate\` WHERE \`order\`.id_order=${id} AND \`order\`.cheque_id=\`cheque\`.id_cheque AND \`order\`.customer_id= \`customer\`.id_customer AND \`cheque\`.services_id=\`typeservices\`.id_services AND \`cheque\`.rate_id=\`rate\`.id_rate`, function (error, results) {
             if (error) throw error;
             console.log('The order is: ', results);
             res.send(results);
@@ -23,7 +23,7 @@ class Controller {
     async getCurrentDayOrders(req, res) {
         // const day = req.body.day;
 
-        await connection.query('SELECT id_order, cheque_id, c_fio, o_dataOrder, o_dateCompletion, o_readiness, o_issuingOrder FROM `order`, `customer` WHERE order.customer_id=customer.id_customer AND `o_dateCompletion`=NOW()', function (error, results) {
+        await connection.query('SELECT id_order, cheque_id, c_fio, o_dataOrder, o_dateCompletion, o_readiness, o_issuingOrder FROM `order`, `customer` WHERE order.customer_id=customer.id_customer AND DATE(`o_dateCompletion`)=CURRENT_DATE', function (error, results) {
             if (error) throw error;
             console.log('The orders is: ', results);
             res.send(results);
@@ -53,7 +53,7 @@ class Controller {
         const user = req.body.user;
         console.log(user);
 
-        await connection.query('SELECT id_order, cheque_id, c_fio, o_dataOrder, o_dateCompletion, o_readiness, o_issuingOrder FROM `order`, `customer` WHERE order.customer_id=customer.id_customer AND c_fio= ?', user, function (error, results) {
+        await connection.query(`SELECT id_order, cheque_id, c_fio, o_dataOrder, o_dateCompletion, o_readiness, o_issuingOrder FROM \`order\`, \`customer\` WHERE order.customer_id=customer.id_customer AND c_fio LIKE '${user}%'`, function (error, results) {
             if (error) throw error;
             console.log('The orders is: ', results);
             res.send(results);
@@ -62,6 +62,22 @@ class Controller {
 
     async getCustomer(req, res) {
         await connection.query('SELECT * FROM `customer`', function (error, results) {
+            if (error) throw error;
+            console.log('The customer is: ', results);
+            res.send(results);
+        })
+    }
+    
+    async getRate(req, res) {
+        await connection.query('SELECT * FROM `rate`', function (error, results) {
+            if (error) throw error;
+            console.log('The customer is: ', results);
+            res.send(results);
+        })
+    }
+
+    async getTypeServices(req, res) {
+        await connection.query('SELECT * FROM `typeservices`', function (error, results) {
             if (error) throw error;
             console.log('The customer is: ', results);
             res.send(results);
@@ -101,13 +117,32 @@ class Controller {
                 res.send(results);
         })
     }
-
-    async addCheque(req, res) {
-
-    }
     
     async addOrder(req, res) {
-
+        const order = req.body;
+        console.log(order);
+        let idCheque;
+        const otpr = {
+            "services": 1,
+            "rate": 1,
+            "customer": 1,
+            "dateCompletion": "2023-03-15 12:00:00"
+        }
+        
+        await connection.query(`INSERT INTO cheque (services_id, rate_id, сh_price) VALUES  (${order.services}, ${order.rate}, (SELECT s_price FROM typeservices WHERE id_services=${order.services})+((SELECT s_price FROM typeservices WHERE id_services=${order.services}) * (SELECT r_premium  FROM rate WHERE id_rate=${order.rate})))`,
+            function (error, results) {
+                if (error) throw error;
+                console.log('The cheque is: ', results);
+                connection.query(`SELECT id_cheque FROM cheque ORDER BY id_cheque DESC LIMIT 1`, function (error, results) {
+                    if (error) throw error;
+                    idCheque = results[0];
+                    idCheque = idCheque.id_cheque;
+                    console.log('The cheque id: ', idCheque);
+                    res.send(results);
+                    connection.query(`INSERT INTO \`order\` (cheque_id, customer_id, o_dataOrder, o_dateCompletion) VALUES (${idCheque}, ${order.customer}, NOW(), "${order.dateCompletion}")`)
+                })
+                
+        })
     }
 
     async deleteRow(req, res) {
@@ -125,37 +160,18 @@ class Controller {
     async selectReport(req, res) {
         const date = req.body;
 
-        await connection.query('SELECT COUNT(`order`.id_order) AS totalOrders,  SUM(cheque.сh_price) AS totalPrice, SUM(typeservices.s_numberImages) AS totalImages FROM `order`, `typeservices`, `cheque` WHERE `order`.cheque_id=cheque.id_cheque AND cheque.services_id=typeservices.id_services AND DATE(`order`.`o_dateCompletion`)>? AND DATE(`order`.`o_dateCompletion`)<?', [date.after, date.before],
+        await connection.query('SELECT COUNT(`order`.id_order) AS totalOrders,  SUM(cheque.сh_price) AS totalPrice, SUM(typeservices.s_numberImages) AS totalImages FROM `order`, `typeservices`, `cheque` WHERE `order`.cheque_id=cheque.id_cheque AND cheque.services_id=typeservices.id_services AND DATE(`order`.`o_dateCompletion`)>=? AND DATE(`order`.`o_dateCompletion`)<=?', [date.after, date.before],
             function (error, results) {
                 if (error) throw error;
                 console.log('The select is: ', results);
                 res.send(results);
         })
-
-        // await connection.query('SELECT COUNT(id_order) AS totalOrders FROM `order` WHERE DATE(`order`.o_dateCompletion)>? AND DATE(`order`.o_dateCompletion)<?', [date.after, date.before],
-        //     function (error, results) {
-        //         if (error) throw error;
-        //         console.log('The select is: ', results);
-        //         report = results;
-        // })
-        // await connection.query('SELECT SUM(cheque.сh_price) AS totalPrice FROM `order` JOIN cheque ON `order`.cheque_id=cheque.id_cheque WHERE DATE(`order`.o_dateCompletion)>? AND DATE(`order`.o_dateCompletion)<?', [date.after, date.before],
-        //     function (error, results) {
-        //         if (error) throw error;
-        //         console.log('The select is: ', results);
-        //         report += results;
-        // })
-        // await connection.query('SELECT SUM(typeservices.s_numberImages) AS totalImages FROM `typeservices`, `cheque`, `order` WHERE cheque.services_id=typeservices.id_services AND DATE(`order`.o_dateCompletion)>? AND DATE(`order`.o_dateCompletion)<?', [date.after, date.before],
-        //     function (error, results) {
-        //         if (error) throw error;
-        //         console.log('The select is: ', results);
-        //         report += results;
-        // })
     }
 
     async getOrderChange(req, res) {
         const id = req.body.id;
 
-        await connection.query('SELECT `order`.id_order, `order`.cheque_id, `customer`.c_fio, `order`.o_dataOrder, `order`.o_dateCompletion, `order`.o_readiness, `order`.o_issuingOrder FROM `order`, `customer` WHERE `order`.customer_id=`customer`.id_customer AND `customer`.`id_customer`=?', id,
+        await connection.query('SELECT `order`.id_order, `order`.cheque_id, `customer`.c_fio, `order`.o_dataOrder, `order`.o_dateCompletion, `order`.o_readiness, `order`.o_issuingOrder FROM `order`, `customer` WHERE `order`.customer_id=`customer`.id_customer AND `order`.id_order=?', id,
             function (error, results) {
                 if (error) throw error;
                 console.log('The delete is: ', results);
@@ -167,7 +183,7 @@ class Controller {
         const result = req.body;
         console.log(result);
 
-        await connection.query('UPDATE `order` SET `o_readiness`=?, `o_issuingOrder`=? WHERE id_order=?', [result.readiness, result.issuing, result.id],
+        await connection.query(`UPDATE \`order\` SET \`o_readiness\`=${result.readiness}, \`o_issuingOrder\`=${result.issuing} WHERE id_order=${result.id}`,
             function (error, results) {
                 if (error) throw error;
                 console.log('The update is: ', results);

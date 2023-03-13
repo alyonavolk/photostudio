@@ -57,6 +57,7 @@
         gap: 30px;
         align-items: flex-start;
         &_input{
+            height: 80px;
             @extend %link-order;
             div{
                 display: flex;

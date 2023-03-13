@@ -13,3 +13,12 @@ export const LIST = {
     currentDay: 'currentDay',
     order: 'order'
 }
+
+export const MODAL = {
+    none: '',
+    cheque: 'cheque',
+    change: 'change',
+    result: 'result',
+    add: 'add',
+    addOrder: 'addOrder'
+}

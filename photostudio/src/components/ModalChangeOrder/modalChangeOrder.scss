@@ -32,8 +32,8 @@
         &:focus{
             border: 2px solid $link-text;
         }
-        &:checked{
-            background-color: $light-text;
+        &_notActive{
+            color: $color-img;
         }
     }
 }

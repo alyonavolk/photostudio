@@ -10,10 +10,13 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', Controller.getOrders);
-// router.get('/order/:id', Controller.getOrder);
 router.get('/readyOrders', Controller.getReadyOrders);
 router.get('/orderOrders', Controller.getOrderOrders);
 router.get('/currentDayOrders', Controller.getCurrentDayOrders);
+
+router.get('/customer', Controller.getCustomer);
+router.get('/rate', Controller.getRate);
+router.get('/typeServices', Controller.getTypeServices);
 
 router.post('/order', Controller.getOrder);
 router.post('/customerOrder', Controller.postCustomerOrder);
@@ -26,7 +29,6 @@ router.post('/addOrder', Controller.addOrder);
 router.post('/addTypeServices', Controller.addTypeServices);
 router.post('/addRate', Controller.addRate);
 router.post('/addCustomer', Controller.addCustomer);
-router.post('/addCheque', Controller.addCheque);
 
 
 module.exports = router;
