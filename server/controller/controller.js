@@ -67,8 +67,6 @@ class Controller {
             res.send(results);
         })
     }
-
-    
     
     async addTypeServices(req, res) {
         const services = req.body;
@@ -152,6 +150,29 @@ class Controller {
         //         console.log('The select is: ', results);
         //         report += results;
         // })
+    }
+
+    async getOrderChange(req, res) {
+        const id = req.body.id;
+
+        await connection.query('SELECT `order`.id_order, `order`.cheque_id, `customer`.c_fio, `order`.o_dataOrder, `order`.o_dateCompletion, `order`.o_readiness, `order`.o_issuingOrder FROM `order`, `customer` WHERE `order`.customer_id=`customer`.id_customer AND `customer`.`id_customer`=?', id,
+            function (error, results) {
+                if (error) throw error;
+                console.log('The delete is: ', results);
+                res.send(results);
+        })
+    }
+
+    async changeOrder(req, res) {
+        const result = req.body;
+        console.log(result);
+
+        await connection.query('UPDATE `order` SET `o_readiness`=?, `o_issuingOrder`=? WHERE id_order=?', [result.readiness, result.issuing, result.id],
+            function (error, results) {
+                if (error) throw error;
+                console.log('The update is: ', results);
+                res.send(results);
+        })
     }
 }
 

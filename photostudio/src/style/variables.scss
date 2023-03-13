@@ -47,6 +47,13 @@ $color-img: #815F51;
     color: $dark-text;
 }
 
+%select-text{
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 30px;
+    color: $dark-text;
+}
+
 %modalHeader{
     position: relative;
     h3 {

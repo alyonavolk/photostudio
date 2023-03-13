@@ -10,14 +10,19 @@ import del from '../../resources/img/del.svg';
 
 import { api } from '../../resources/config';
 import { LIST } from '../../resources/Routes';
+import { defOrderCustomer, defResult, defOrderChange } from '../../resources/defaultObject';
 import ModalResults from '../ModalResults/ModalResults';
 import ModalCheque from '../ModalCheque/ModalCheque';
+import ModalChangeOrder from '../ModalChangeOrder/ModalChangeOrder';
 import Pagination from '../subComponents/Pagination/Pagination';
 
 const Orders = () => {
     const [searchName, setSearchName] = useState('');
     const [orders, setOrders] = useState([]);
     const [activeList, setActiveList] = useState(LIST.all);
+    useEffect(() => {
+        getOrders();
+    }, []);
 
     const [currentPage, setCurrentPage] = useState(1);
     const OrdersPerPage = 5;
@@ -28,38 +33,17 @@ const Orders = () => {
     const paginate = page => {
         setCurrentPage(page);
     }
+    const [modalCheque, setModalCheque] = useState(false);
+    const [orderCustomer, setOrderCustomer] =  useState(defOrderCustomer);
+
+    const [modalChange, setModalChange] = useState(false);
+    const [orderChange, setOrderChange] = useState(defOrderChange);
 
     const [modalResult, setModalResult] = useState(false);
-    const [result, setResult] =  useState({totalOrders: '', totalPrice: '', totalImages: ''});
-
-    const [modalCheque, setModalCheque] = useState(false);
-    const [orderCustomer, setOrderCustomer] =  useState({
-		"id_order": 0,
-		"cheque_id": 0,
-		"o_dataOrder": "",
-		"o_dateCompletion": "",
-		"o_readiness": {
-			"data": [
-				0
-			]
-		},
-		"o_issuingOrder": {
-			"data": [
-				0
-			]
-		},
-		"s_name": "",
-		"сh_price": 7500,
-		"c_fio": "",
-		"c_telephone": "",
-		"r_name": "",
-	});
-
-    useEffect(() => {
-        getOrders();
-    }, []);
+    const [result, setResult] =  useState(defResult);
 
     const regDate = /\d{4}(-)\d{2}\1\d{2}/;
+
     const formik = useFormik({
         initialValues: {
             dateAfter: '',
@@ -126,10 +110,18 @@ const Orders = () => {
         const res = await api.post('/order', { id: id});
         console.log(res.data);
         setOrderCustomer(res.data[0]);
-        console.log(res.data);
         setModalCheque(true);
     }
 
+    const getOrderChange = async (id) => {
+        const res = await api.post('/orderChange', { id: id})
+        .then(res => {
+            console.log(res.data[0]);
+            setOrderChange(res.data[0]);
+            setModalChange(true);
+        })
+        .catch(err => console.log(err))
+    }
     
 
     return (
@@ -213,7 +205,8 @@ const Orders = () => {
                                     onClick={() => getOrderCustomer(res.id_order)}>
                                         <img src={list} alt=''/>
                                     </Button>
-                                    <Button mix='empty'>
+                                    <Button mix='empty'
+                                    onClick={() => getOrderChange(res.id_order)}>
                                         <img src={change} alt=''/>
                                     </Button>
                                     <Button mix='empty' 
@@ -287,6 +280,19 @@ const Orders = () => {
                         o_dateCompletion={orderCustomer.o_dateCompletion.slice(0, 10) + " " + orderCustomer.o_dateCompletion.slice(12, 19)}
                         o_readiness={orderCustomer.o_readiness.data[0] === 0 ? 'Нет' : 'Да'}
                         o_issuingOrder={orderCustomer.o_issuingOrder.data[0] === 0 ? 'Нет' : 'Да'}
+                        />
+            </div>
+            <div className={`orders__modal ${modalChange ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModalChange(false)}>
+                    <ModalChangeOrder close={() => setModalChange(false)}
+                        content={(e) => e.stopPropagation()}
+                        getOrders={getOrders}
+                        id_order={orderChange.id_order}
+                        c_fio={orderChange.c_fio}
+                        o_dataOrder={orderChange.o_dataOrder.slice(0, 10) + " " + orderChange.o_dataOrder.slice(12, 19)}
+                        o_dateCompletion={orderChange.o_dateCompletion.slice(0, 10) + " " + orderChange.o_dateCompletion.slice(12, 19)}
+                        o_readiness={orderChange.o_readiness.data[0]}
+                        o_issuingOrder={orderChange.o_issuingOrder.data[0]}
                         />
             </div>
         </div>

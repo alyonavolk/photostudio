@@ -19,6 +19,8 @@ router.post('/order', Controller.getOrder);
 router.post('/customerOrder', Controller.postCustomerOrder);
 router.post('/delete', Controller.deleteRow);
 router.post('/selectReport', Controller.selectReport);
+router.post('/orderChange', Controller.getOrderChange);
+router.post('/change', Controller.changeOrder);
 
 router.post('/addOrder', Controller.addOrder);
 router.post('/addTypeServices', Controller.addTypeServices);

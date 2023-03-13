@@ -16,7 +16,7 @@ const ModalCheque = ({close, content, ...data}) => {
                 <p>ID чека: {data.cheque_id}</p>
                 <p>Вид услуги: {data.s_name}</p>
                 <p>Тариф: {data.r_name}</p>
-                <p>Общая стоимость: {data.сh_price}</p>
+                <p>Общая стоимость: {data.сh_price} руб.</p>
                 <p>
                     Дата заказа: {data.o_dataOrder}
                 </p>

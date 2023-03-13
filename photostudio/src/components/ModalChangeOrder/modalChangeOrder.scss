@@ -1,0 +1,39 @@
+@import '../../style/variables.scss';
+
+.modalChange{
+    width: 500px;
+    max-height: 700px;
+    padding: 20px 10px;
+    background-color: $light-back;
+    border-radius: 20px;
+    &__header{
+        @extend %modalHeader;
+        padding-bottom: 30px; 
+    }
+    &__content{
+        @extend %link-order;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 5%;
+        div {
+            margin: 0 auto;
+        }
+    }
+    &__select{
+        @extend %select-text;
+        background-color: $main-color;
+        border: 2px solid $light-text;
+        border-radius: 10px;
+        padding: 2px 10px;
+        &:hover{
+            background-color: $back;
+        }
+        &:focus{
+            border: 2px solid $link-text;
+        }
+        &:checked{
+            background-color: $light-text;
+        }
+    }
+}
