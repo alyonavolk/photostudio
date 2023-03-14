@@ -7,6 +7,7 @@ import { ROUTES } from '../../resources/Routes';
 import Orders from '../Orders/Orders';
 import Cheque from '../Cheque/Cheque';
 import Customers from '../Customers/Customers';
+import TypeServices from '../TypeServices/TypeServices';
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
           </Route>
           <Route exact path={ROUTES.typeServices}>
             <div className='app__section'>
+              <TypeServices />
             </div>
           </Route>
           <Route exact path={ROUTES.cheque}>

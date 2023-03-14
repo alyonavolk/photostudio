@@ -54,7 +54,7 @@ const ModalAddRow = ({close, content, modal, getOrders}) => {
     })
 
     const getCustomer = async () => {
-        const res = await api.get('/customer');
+        const res = await api.get('/customers');
         console.log(res.data);
         setCustomer(res.data);
     }
