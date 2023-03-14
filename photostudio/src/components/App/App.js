@@ -8,6 +8,7 @@ import Orders from '../Orders/Orders';
 import Cheque from '../Cheque/Cheque';
 import Customers from '../Customers/Customers';
 import TypeServices from '../TypeServices/TypeServices';
+import Rate from '../Rate/Rate';
 
 function App() {
   
@@ -38,6 +39,7 @@ function App() {
           </Route>
           <Route exact path={ROUTES.rate}>
             <div className='app__section'>
+              <Rate />
             </div>
           </Route>
         </Switch>

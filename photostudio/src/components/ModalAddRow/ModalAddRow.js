@@ -47,6 +47,7 @@ const ModalAddRow = ({close, content, modal, getOrders}) => {
                 }).then((res) => {
                     console.log(res.data);
                 });
+                formik.values.dateCompletion = '';
                 close();
                 await getOrders();
             }

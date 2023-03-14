@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './customers.scss';
+import './rate.scss';       
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -13,69 +13,67 @@ import ModalAdd from '../ModalAdd/ModalAdd';
 import Delete from '../subComponents/Delete/Delete';
 
 const Customers = () => {
-    const [customers, setCustomers] = useState([]);
+    const [rate, setRate] = useState([]);
     const [modal, setModal] = useState();
     const [remove, setRemove] = useState({del: false, id: 0});
 
     const [currentPage, setCurrentPage] = useState(1);
-    const CustomersPerPage = 7;
-    const lastCustomersIndex = currentPage * CustomersPerPage;
-    const firstCustomersIndex = lastCustomersIndex - CustomersPerPage;
-    const currentCustomers = customers.slice(firstCustomersIndex, lastCustomersIndex);
+    const RatePerPage = 7;
+    const lastRateIndex = currentPage * RatePerPage;
+    const firstRateIndex = lastRateIndex - RatePerPage;
+    const currentRate = rate.slice(firstRateIndex, lastRateIndex);
 
     const paginate = page => {
         setCurrentPage(page);
     }
 
     useEffect(() => {
-        getCustomers();
+        getRate();
     }, []);
 
-    const getCustomers = async () => {
-        const res = await api.get('/customers');
+    const getRate = async () => {
+        const res = await api.get('/rate');
         console.log(res.data);
-        setCustomers(res.data);
+        setRate(res.data);
     }
 
-    const delCustomer = async () => {
-        remove.del && await api.post('/delete', {table: 'customer', row: 'id_customer', id: remove.id})
+    const delRate = async () => {
+        remove.del && await api.post('/delete', {table: 'rate', row: 'id_rate', id: remove.id})
         .then(() => {
             setModal(MODAL.none);
             setRemove({del: false, id: 0});
             console.log(remove);
         })
-        await getCustomers();
+        await getRate();
     }
-
-    const phoneReg = /^([\+]?[7|8][\s-(]?[9][0-9]{2}[\s-)]?)?([\d]{3})[\s-]?([\d]{2})[\s-]?([\d]{2})/;
 
     const formik = useFormik({
         initialValues: {
-            fio: '',
-            tel: ''
+            name: '',
+            premium: ''
         },
         validationSchema: Yup.object({
-            fio: Yup.string().required('Введите ФИО заказчика'),
-            tel: Yup.string().matches(phoneReg, 'Неверный номер телефона').required('Введите номер телефона')
+            name: Yup.string().required('Введите название тарифа'),
+            premium: Yup.number('Введите число').negative('Введите положительное число').integer('Введите целое число').required('Введите надбавку за тариф').min(0, 'Надбавка не может быть меньше 0').max(100, 'Надбавка не может быть больше 100%')
         }),
         onSubmit: async () => {
-            await api.post('/addCustomer', {
-                name: formik.values.fio,
-                telephone: formik.values.tel
+            await api.post('/addRate', {
+                name: formik.values.name,
+                premium: formik.values.premium/100
             }).then((res) => {
                 console.log(res.data);
             });
-            formik.values.fio = '';
-            formik.values.tel = '';
+            formik.values.name = '';
+            formik.values.premium = '';
             setModal(MODAL.none);
-            await getCustomers();
+            await getRate();
         } 
     })
 
 
     return (
-        <div className='customer'>
-            <h2 className='customer__title'>
+        <div className='rate'>
+            <h2 className='rate__title'>
                 Заказы
             </h2>
             <div className='table'>
@@ -83,29 +81,29 @@ const Customers = () => {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th className='customer__row_fio'>ФИО заказчика</th>
-                            <th className='customer__row_tel'>Телефон заказчика</th>
-                            <th className='customer__row_last' 
+                            <th className='rate__row_fio'>Тариф</th>
+                            <th className='rate__row_tel'>Надбавка</th>
+                            <th className='rate__row_last' 
                             onClick={() => setModal(MODAL.add)} >
                                 +
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {currentCustomers.map((res) => (   
-                            <tr key={res.id_customer} className='clientTable'>
+                        {currentRate.map((res) => (   
+                            <tr key={res.id_rate} className='clientTable'>
                                 <td>
-                                    {res.id_customer}
+                                    {res.id_rate}
                                 </td>
                                 <td>
-                                    {res.c_fio}
+                                    {res.r_name}
                                 </td>
                                 <td>
-                                    {res.c_telephone}
+                                    {res.r_premium * 100} %
                                 </td>
-                                <td className='customer__row_btn'>
+                                <td>
                                     <Button mix='empty' 
-                                    onClick={() => {setRemove({del: true, id: res.id_customer}); 
+                                    onClick={() => {setRemove({del: true, id: res.id_rate}); 
                                     setModal(MODAL.delete)}}>
                                         <img src={del} alt=''/>
                                     </Button>
@@ -116,8 +114,8 @@ const Customers = () => {
                 </table>
                 <div className='table__pagination'>
                     <Pagination
-                    totalOrders={customers.length} 
-                    ordersPerPage={CustomersPerPage}
+                    totalOrders={rate.length} 
+                    ordersPerPage={RatePerPage}
                     paginate={paginate} />
                 </div>
             </div>
@@ -127,17 +125,17 @@ const Customers = () => {
                         table='customer'
                         content={(e) => e.stopPropagation()}
                         formik={formik}
-                        titleOne='ФИО заказчика:' titleTwo='Номер телефона заказчика:'
-                        placeholderOne='Иванов Иван Иванонич' placeholderTwo='7(999)999-99-99'
-                        nameOne='fio' nameTwo='tel'
-                        valueOne={formik.values.fio} valueTwo={formik.values.tel}
-                        touchedOne={formik.touched.fio} touchedTwo={formik.touched.tel}
-                        errorsOne={formik.errors.fio} errorsTwo={formik.errors.tel}
+                        titleOne='Тариф:' titleTwo='Надбавка (%):'
+                        placeholderOne='срочный' placeholderTwo='20'
+                        nameOne='name' nameTwo='premium'
+                        valueOne={formik.values.name} valueTwo={formik.values.premium}
+                        touchedOne={formik.touched.name} touchedTwo={formik.touched.premium}
+                        errorsOne={formik.errors.name} errorsTwo={formik.errors.premium}
                     />
             </div>
             <div className={`orders__modal ${modal === MODAL.delete ? 'orders__modal_active' : 'orders__modal_close'}`} 
                 onClick={() => setModal(MODAL.none)}>
-                    <Delete yes={delCustomer} no={() => setModal(MODAL.none)} 
+                    <Delete yes={delRate} no={() => setModal(MODAL.none)} 
                     content={(e) => e.stopPropagation()} />
             </div>
         </div>

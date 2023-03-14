@@ -15,19 +15,19 @@ import ModalCheque from '../ModalCheque/ModalCheque';
 import ModalChangeOrder from '../ModalChangeOrder/ModalChangeOrder';
 import ModalAddRow from '../ModalAddRow/ModalAddRow';
 import Pagination from '../subComponents/Pagination/Pagination';
+import Delete from '../subComponents/Delete/Delete';
 
 const Orders = () => {
     const [searchName, setSearchName] = useState('');
     const [orders, setOrders] = useState([]);
     const [activeList, setActiveList] = useState(LIST.all);
+    const [remove, setRemove] = useState({del: false, id: 0});
+    const [id, setId] = useState(0);
+    const [modal, setModal] = useState(MODAL.none);
 
     useEffect(() => {
         getOrders();
     }, []);
-
-
-    const [id, setId] = useState(0);
-    const [modal, setModal] = useState(MODAL.none);
 
     const [currentPage, setCurrentPage] = useState(1);
     const OrdersPerPage = 5;
@@ -74,6 +74,13 @@ const Orders = () => {
         setActiveList(LIST.ready);
     }
 
+    const getIssuedOrders = async () => {
+        const res = await api.get('/issuedOrders');
+        console.log(res.data);
+        setOrders(res.data);
+        setActiveList(LIST.issued);
+    }
+
     const getCurrentDayOrders = async () => {
         const res = await api.get('/currentDayOrders');
         console.log(res.data);
@@ -88,9 +95,13 @@ const Orders = () => {
         setActiveList(LIST.none);
     }
 
-    const delOrder = async (id) => {
-        const res = await api.post('/delete', {table: 'order', row: 'id_order', id: id});
-        console.log(res.data);
+    const delOrder = async () => {
+        remove.del && await api.post('/delete', {table: 'order', row: 'id_order', id: remove.id})
+        .then(() => {
+            setModal(MODAL.none);
+            setRemove({del: false, id: 0});
+            console.log(remove);
+        })
         await getOrders();
     }
 
@@ -103,19 +114,23 @@ const Orders = () => {
             </h2>
             <div className='orders__query'>
                 <ul className='orders__list'>
-                    <li className={activeList === 'all' ? 'orders__list_active' : ''}
+                    <li className={activeList === LIST.all ? 'orders__list_active' : ''}
                     onClick={() => getOrders()}>
                         Все
                     </li>
-                    <li className={activeList === 'ready' ? 'orders__list_active' : ''}
+                    <li className={activeList === LIST.ready ? 'orders__list_active' : ''}
                     onClick={() => getReadyOrders()}>
                         Готовые
                     </li>
-                    <li className={activeList === 'currentDay' ? 'orders__list_active' : ''}
+                    <li className={activeList === LIST.issued ? 'orders__list_active' : ''}
+                    onClick={() => getIssuedOrders()}>
+                        Выданные
+                    </li>
+                    <li className={activeList === LIST.currentDay ? 'orders__list_active' : ''}
                     onClick={() => getCurrentDayOrders()}>
                         На текущие сутки
                     </li>
-                    <li className={activeList === 'order' ? 'orders__list_active' : ''}
+                    <li className={activeList === LIST.order ? 'orders__list_active' : ''}
                     onClick={() => getOrderOrders()}>
                         По дате выполнения
                     </li>
@@ -184,7 +199,8 @@ const Orders = () => {
                                         <img src={change} alt=''/>
                                     </Button>
                                     <Button mix='empty' 
-                                    onClick={() => delOrder(res.id_order)}>
+                                    onClick={() => {setRemove({del: true, id: res.id_order}); 
+                                    setModal(MODAL.delete)}}>
                                         <img src={del} alt=''/>
                                     </Button>
                                 </td>
@@ -259,6 +275,11 @@ const Orders = () => {
                         content={(e) => e.stopPropagation()}
                         modal={modal} getOrders={getOrders}
                         />
+            </div>
+            <div className={`orders__modal ${modal === MODAL.delete ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModal(MODAL.none)}>
+                    <Delete yes={delOrder} no={() => setModal(MODAL.none)} 
+                    content={(e) => e.stopPropagation()} />
             </div>
         </div>
     );

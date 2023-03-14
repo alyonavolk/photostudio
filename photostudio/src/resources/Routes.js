@@ -11,7 +11,8 @@ export const LIST = {
     all: 'all',
     ready: 'ready',
     currentDay: 'currentDay',
-    order: 'order'
+    order: 'order',
+    issued: 'issued'
 }
 
 export const MODAL = {
@@ -20,5 +21,6 @@ export const MODAL = {
     change: 'change',
     result: 'result',
     add: 'add',
-    addOrder: 'addOrder'
+    addOrder: 'addOrder',
+    delete: 'delete'
 }

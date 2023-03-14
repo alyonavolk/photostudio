@@ -10,10 +10,12 @@ import { MODAL } from '../../resources/Routes';
 import Pagination from '../subComponents/Pagination/Pagination';
 import Button from '../subComponents/Button/Button';
 import ModalAdd from '../ModalAdd/ModalAdd';
+import Delete from '../subComponents/Delete/Delete';
 
 const Customers = () => {
     const [services, setServices] = useState([]);
     const [modal, setModal] = useState();
+    const [remove, setRemove] = useState({del: false, id: 0});
 
     const [currentPage, setCurrentPage] = useState(1);
     const ServicesPerPage = 7;
@@ -35,9 +37,12 @@ const Customers = () => {
         setServices(res.data);
     }
 
-    const delServices = async (id) => {
-        const res = await api.post('/delete', {table: 'typeservices', row: 'id_services', id: id});
-        console.log(res.data);
+    const delServices = async () => {
+        remove.del && await api.post('/delete', {table: 'typeservices', row: 'id_services', id: remove.id})
+        .then(() => {
+            setModal(MODAL.none);
+            setRemove({del: false, id: 0});
+        })
         await getServices();
     }
 
@@ -48,9 +53,9 @@ const Customers = () => {
             images: ''
         },
         validationSchema: Yup.object({
-            name: Yup.string().required('Введите название услуги'),
-            price: Yup.number().positive().integer().required('Введите цену услуги'),
-            images: Yup.number().positive().integer().required('Введите количество снимков')
+            name: Yup.string('Введите строку').required('Введите название услуги'),
+            price: Yup.number('Введите число').positive('Введите положительное число').integer('Введите целое число').required('Введите цену услуги'),
+            images: Yup.number('Введите число').positive('Введите положительное число').integer('Введите целое число').required('Введите количество снимков')
         }),
         onSubmit: async () => {
             await api.post('/addTypeServices', {
@@ -60,6 +65,9 @@ const Customers = () => {
             }).then((res) => {
                 console.log(res.data);
             });
+            formik.values.images = '';
+            formik.values.name = '';
+            formik.values.price = '';
             setModal(MODAL.none);
             await getServices();
         } 
@@ -102,7 +110,8 @@ const Customers = () => {
                                 </td>
                                 <td>
                                     <Button mix='empty' 
-                                    onClick={() => delServices(res.id_services)}>
+                                    onClick={() => {setRemove({del: true, id: res.id_services}); 
+                                    setModal(MODAL.delete)}}>
                                         <img src={del} alt=''/>
                                     </Button>
                                 </td>
@@ -130,6 +139,11 @@ const Customers = () => {
                         touchedOne={formik.touched.name} touchedTwo={formik.touched.images}
                         errorsOne={formik.errors.name} errorsTwo={formik.errors.images}
                         />
+            </div>
+            <div className={`orders__modal ${modal === MODAL.delete ? 'orders__modal_active' : 'orders__modal_close'}`} 
+                onClick={() => setModal(MODAL.none)}>
+                    <Delete yes={delServices} no={() => setModal(MODAL.none)} 
+                    content={(e) => e.stopPropagation()} />
             </div>
         </div>
     );
