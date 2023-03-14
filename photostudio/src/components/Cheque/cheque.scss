@@ -1,0 +1,22 @@
+@import '../../style/variables.scss';
+
+.cheque{
+    position: relative;
+    &__title{
+        @extend %h2;
+        text-align: center;
+        padding-bottom: 30px;
+    }
+    &__row{
+        &_services{
+            width: 30%;
+        }
+        &_rate{
+            width: 10%;
+        }
+        &_last{
+            width: 5%;
+            border-radius: 0 20px 0 0;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+@import '../../style/variables.scss';
+
+.modalAdd{
+    width: 500px;
+    max-height: 700px;
+    padding: 20px 10px;
+    background-color: $light-back;
+    border-radius: 20px;
+    &__header{
+        @extend %modalHeader;
+        padding-bottom: 30px; 
+    }
+    &__content{
+        @extend %link-order;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 5%;
+        &_btn{
+            margin: 0 auto;
+        }
+    }
+    &__input{
+        height: 100px;
+        &_error{
+            padding-top: 5px;
+            @extend %table-text;
+        }
+    }
+}

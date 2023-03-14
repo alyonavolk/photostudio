@@ -13,6 +13,17 @@
     background-color: $light-back;
     border-radius: 20px;
     max-height: 700px;
+    &__row{
+        &_id{
+            width: 9%;
+        }
+        &_customer{
+            width: 22%;
+        }
+        &_date{
+            width: 17%;
+        }
+    }
     table {
         border-radius: 20px;
         border-collapse: collapse;
@@ -28,13 +39,7 @@
                     border-radius: 20px 0 0;
                     width: 5%;
                 }
-                &:nth-child(2){
-                    width: 9%;
-                }
-                &:nth-child(3){
-                    width: 22%;
-                }
-                &:nth-child(4), &:nth-child(5){
+                 &:nth-child(5){
                     width: 17%;
                 }
                 &:nth-child(6), &:nth-child(7){
@@ -68,13 +73,7 @@
                 &:nth-child(1){
                     width: 5%;
                 }
-                &:nth-child(2){
-                    width: 9%;
-                }
-                &:nth-child(3){
-                    width: 22%;
-                }
-                &:nth-child(4), &:nth-child(5){
+                &:nth-child(5){
                     width: 17%;
                 }
                 &:nth-child(6), &:nth-child(7){

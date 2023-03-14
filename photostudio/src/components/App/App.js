@@ -5,6 +5,8 @@ import Header from '../Header/Header';
 
 import { ROUTES } from '../../resources/Routes';
 import Orders from '../Orders/Orders';
+import Cheque from '../Cheque/Cheque';
+import Customers from '../Customers/Customers';
 
 function App() {
   
@@ -20,6 +22,7 @@ function App() {
           </Route>
           <Route exact path={ROUTES.customer}>
             <div className='app__section'>
+              <Customers />
             </div>
           </Route>
           <Route exact path={ROUTES.typeServices}>
@@ -28,6 +31,7 @@ function App() {
           </Route>
           <Route exact path={ROUTES.cheque}>
             <div className='app__section'>
+              <Cheque />
             </div>
           </Route>
           <Route exact path={ROUTES.rate}>

@@ -22,9 +22,6 @@ const ModalAddRow = ({close, content, modal, getOrders}) => {
             getCustomer();
             getRate();
             getServices();
-            console.log('modalADD: ', customer);
-            console.log('modalADD: ', rate);
-            console.log('modalADD: ', services);
         }
     }, [modal]);
 
@@ -75,14 +72,14 @@ const ModalAddRow = ({close, content, modal, getOrders}) => {
     }
 
     return (
-        <div className='modalAdd' onClick={content}>
-            <div className='modalAdd__header'>
+        <div className='modalAddRow' onClick={content}>
+            <div className='modalAddRow__header'>
                 <h3>Добавить</h3>
                 <Button mix='empty' onClick={close}>
                     &#10008;
                 </Button>
             </div>
-            <div className='modalAdd__content'>
+            <div className='modalAddRow__content'>
                 <p>Заказчик</p>
                 <select className='modalChange__select' value={selectCustomer} onChange={(e) => setSelectCustomer(e.target.value)} >
                     <option className='modalChange__select_notActive' value={0}>Выберите заказчика</option>
@@ -104,7 +101,7 @@ const ModalAddRow = ({close, content, modal, getOrders}) => {
                         <option key={data.id_rate} value={data.id_rate}>{data.r_name}</option>
                     ))}
                 </select>
-                <div className='modalAdd__input'>
+                <div className='modalAddRow__input'>
                     <div>
                     <p>Дата выполнения:</p>
                         <input className='orders__input'
@@ -114,9 +111,9 @@ const ModalAddRow = ({close, content, modal, getOrders}) => {
                         value={formik.values.dateCompletion}
                         onBlur={formik.handleBlur}/>
                     </div>
-                    {formik.touched.dateCompletion && formik.errors.dateCompletion? <div className='modalAdd__input_error'>{formik.errors.dateCompletion}</div> : null}
+                    {formik.touched.dateCompletion && formik.errors.dateCompletion? <div className='modalAddRow__input_error'>{formik.errors.dateCompletion}</div> : null}
                 </div>
-                <div className='modalAdd__content_btn'>
+                <div className='modalAddRow__content_btn'>
                     <Button type='submit' mix='prim' onClick={formik.handleSubmit}>Добавить</Button>
                 </div>
             </div>

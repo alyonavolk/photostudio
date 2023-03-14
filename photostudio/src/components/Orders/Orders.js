@@ -135,9 +135,9 @@ const Orders = () => {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>ID Чека</th>
-                            <th>ФИО Заказчика</th>
-                            <th>Дата заказа</th>
+                            <th className='table__row_id'>ID Чека</th>
+                            <th className='table__row_customer'>ФИО Заказчика</th>
+                            <th className='table__row_date'>Дата заказа</th>
                             <th>Дата выполнения</th>
                             <th>Готовность</th>
                             <th>Выдача заказа</th>
@@ -152,13 +152,13 @@ const Orders = () => {
                                 <td>
                                     {res.id_order}
                                 </td>
-                                <td>
+                                <td className='table__row_id'>
                                     {res.cheque_id}
                                 </td>
-                                <td>
+                                <td className='table__row_customer'>
                                     {res.c_fio}
                                 </td>
-                                <td>
+                                <td className='table__row_date'>
                                     {res.o_dataOrder.slice(0, 10)
                                     + ' ' +
                                     res.o_dataOrder.slice(12, 19)}

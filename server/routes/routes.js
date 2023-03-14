@@ -14,9 +14,10 @@ router.get('/readyOrders', Controller.getReadyOrders);
 router.get('/orderOrders', Controller.getOrderOrders);
 router.get('/currentDayOrders', Controller.getCurrentDayOrders);
 
-router.get('/customer', Controller.getCustomer);
+router.get('/customers', Controller.getCustomers);
 router.get('/rate', Controller.getRate);
 router.get('/typeServices', Controller.getTypeServices);
+router.get('/cheque', Controller.getCheque);
 
 router.post('/order', Controller.getOrder);
 router.post('/customerOrder', Controller.postCustomerOrder);

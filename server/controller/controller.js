@@ -60,7 +60,7 @@ class Controller {
         })
     }
 
-    async getCustomer(req, res) {
+    async getCustomers(req, res) {
         await connection.query('SELECT * FROM `customer`', function (error, results) {
             if (error) throw error;
             console.log('The customer is: ', results);
@@ -80,6 +80,14 @@ class Controller {
         await connection.query('SELECT * FROM `typeservices`', function (error, results) {
             if (error) throw error;
             console.log('The customer is: ', results);
+            res.send(results);
+        })
+    }
+
+    async getCheque(req, res) {
+        await connection.query('SELECT id_cheque, s_name, r_name, сh_price FROM `cheque`, `typeservices`, `rate` WHERE id_services=services_id AND id_rate=rate_id', function (error, results) {
+            if (error) throw error;
+            console.log('The cheque is: ', results);
             res.send(results);
         })
     }
