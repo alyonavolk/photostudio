@@ -176,12 +176,12 @@ const Orders = () => {
                                 <td className='table__row_date'>
                                     {res.o_dataOrder.slice(0, 10)
                                     + ' ' +
-                                    res.o_dataOrder.slice(12, 19)}
+                                    new Date(res.o_dataOrder).toLocaleTimeString()}
                                 </td>
                                 <td>
                                     {res.o_dateCompletion.slice(0, 10)
                                     + ' ' +
-                                    res.o_dateCompletion.slice(12, 19)}
+                                    new Date(res.o_dateCompletion).toLocaleTimeString()}
                                 </td>
                                 <td>
                                     {res.o_readiness.data[0] === 0 ? 'Нет' : 'Да'}

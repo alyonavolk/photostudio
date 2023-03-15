@@ -47,7 +47,7 @@ class OrderController {
                     idCheque = idCheque.id_cheque;
                     console.log('The cheque id: ', idCheque);
                     res.send(results);
-                    connection.query(`INSERT INTO \`order\` (cheque_id, customer_id, o_dataOrder, o_dateCompletion) VALUES (${idCheque}, ${order.customer}, NOW(), "${order.dateCompletion}")`)
+                    connection.query(`INSERT INTO \`order\` (cheque_id, customer_id, o_dataOrder, o_dateCompletion) VALUES (${idCheque}, ${order.customer}, NOW(), "${order.dateCompletion}:00")`)
                 })
                 
         })

@@ -13,6 +13,7 @@
         }
     }
     &__prim{
+        transition: background-color 300ms linear;
         border: 1px solid $main-color;
         background-color: $main-color;
         padding: 6px 10px;

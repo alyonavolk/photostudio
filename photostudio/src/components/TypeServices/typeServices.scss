@@ -20,6 +20,7 @@
             text-align: center;
             font-size: 38px;
             cursor: pointer;
+            transition: color 300ms linear;
             &:hover{
                 color: $light-text;
             }

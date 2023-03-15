@@ -30,7 +30,7 @@ const Cheque = () => {
     return (
         <div className='cheque'>
             <h2 className='cheque__title'>
-                Заказы
+                Чеки
             </h2>
             <div className='table'>
                 <table>

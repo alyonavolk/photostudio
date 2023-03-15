@@ -77,7 +77,7 @@ const Customers = () => {
     return (
         <div className='services'>
             <h2 className='services__title'>
-                Заказы
+                Виды услуг
             </h2>
             <div className='table'>
                 <table>

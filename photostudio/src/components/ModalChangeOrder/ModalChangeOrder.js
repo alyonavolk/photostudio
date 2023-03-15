@@ -45,8 +45,16 @@ const ModalChangeOrder = ({close, content, id, modal, getOrders}) => {
             <div className='modalChange__content'>
                 <p>ID чека: <span>{orderChange.cheque_id}</span></p>
                 <p>ФИО заказчика: <span>{orderChange.c_fio}</span></p>
-                <p>Дата заказа: <span>{orderChange.o_dataOrder.slice(0, 10) + " " + orderChange.o_dataOrder.slice(12, 19)}</span></p>
-                <p>Дата выполнения: <span>{orderChange.o_dateCompletion.slice(0, 10) + " " + orderChange.o_dateCompletion.slice(12, 19)}</span></p>
+                <p>Дата заказа: 
+                    <span>{orderChange.o_dataOrder.slice(0, 10) 
+                    + " " +
+                    new Date(orderChange.o_dataOrder).toLocaleTimeString()}</span>
+                </p>
+                <p>Дата выполнения: 
+                    <span>{orderChange.o_dateCompletion.slice(0, 10) 
+                    + " " + 
+                    new Date(orderChange.o_dataOrder).toLocaleTimeString()}</span>
+                </p>
                 <p>Готовность: </p>
                 <select className='modalChange__select' value={selectReadiness} onChange={(e) => setSelectReadiness(e.target.value)} >
                     <option value={0}>Нет</option>

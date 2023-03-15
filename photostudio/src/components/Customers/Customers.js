@@ -76,7 +76,7 @@ const Customers = () => {
     return (
         <div className='customer'>
             <h2 className='customer__title'>
-                Заказы
+                Заказчики
             </h2>
             <div className='table'>
                 <table>

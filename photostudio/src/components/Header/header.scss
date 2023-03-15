@@ -19,6 +19,7 @@
         @extend %link;
     }
     &__link{
+        transition: color 300ms linear;
         color: $dark-text;
         &_active, &:hover{
             color: $light-text;

@@ -74,7 +74,7 @@ const Customers = () => {
     return (
         <div className='rate'>
             <h2 className='rate__title'>
-                Заказы
+                Тарифы
             </h2>
             <div className='table'>
                 <table>

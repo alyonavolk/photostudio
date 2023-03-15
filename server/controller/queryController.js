@@ -1,7 +1,7 @@
 const { connection } = require('../config/config');
 
 class QueryController {
-    
+
     //составление перечня заказов на текущие сутки
     async getCurrentDayOrders(req, res) {
         // const day = req.body.day;
@@ -24,7 +24,7 @@ class QueryController {
     
     //составление списка готовых к выдаче заказов
     async getReadyOrders(req, res) {
-        await connection.query('SELECT order.id_order, order.cheque_id, customer.c_fio, order.o_dataOrder, order.o_dateCompletion, order.o_readiness, order.o_issuingOrder FROM `order`, `customer` WHERE order.customer_id=customer.id_customer AND `o_readiness`=1 AND `o_issuingOrder`=0', function (error, results) {
+        await connection.query('SELECT order.id_order, order.cheque_id, customer.c_fio, order.o_dataOrder, order.o_dateCompletion, order.o_readiness, order.o_issuingOrder FROM `order`, `customer` WHERE order.customer_id=customer.id_customer AND `o_readiness`=1 AND `o_issuingOrder`=0 ORDER BY order.o_dateCompletion ASC', function (error, results) {
             if (error) throw error;
             console.log('The orders is: ', results);
             res.send(results);
