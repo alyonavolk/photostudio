@@ -27,7 +27,7 @@ class Controller {
     }
 
     async getCheque(req, res) {
-        await connection.query('SELECT id_cheque, s_name, r_name, сh_price FROM `cheque`, `typeservices`, `rate` WHERE id_services=services_id AND id_rate=rate_id', function (error, results) {
+        await connection.query('SELECT id_cheque, s_name, r_name, сh_price FROM `cheque`, `typeservices`, `rate` WHERE id_rate=rate_id AND id_services=services_id', function (error, results) {
             if (error) throw error;
             console.log('The cheque is: ', results);
             res.send(results);
