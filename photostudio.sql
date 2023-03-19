@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 10 2023 г., 19:24
+-- Время создания: Мар 19 2023 г., 19:30
 -- Версия сервера: 10.4.25-MariaDB
 -- Версия PHP: 8.1.10
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `photostudio`
+-- База данных: `photostudionew`
 --
 
 -- --------------------------------------------------------
@@ -41,7 +41,11 @@ CREATE TABLE `cheque` (
 INSERT INTO `cheque` (`id_cheque`, `services_id`, `rate_id`, `сh_price`) VALUES
 (1, 1, 1, '7500.00'),
 (2, 3, 1, '3000.00'),
-(3, 6, 2, '480.00');
+(3, 6, 2, '480.00'),
+(4, 2, 1, '4000.00'),
+(5, 5, 2, '5160.00'),
+(6, 4, 1, '5700.00'),
+(7, 4, 1, '5700.00');
 
 -- --------------------------------------------------------
 
@@ -60,8 +64,11 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id_customer`, `c_fio`, `c_telephone`) VALUES
-(1, 'Ковалева Ульяна Дмитриевна', '7 (992) 607-83-43'),
-(2, 'Киселев Роман Иванович', '7 (994) 408-02-29');
+(1, 'Ковалева Ульяна Дмитриевна', '7(992)607-83-43'),
+(2, 'Киселев Роман Иванович', '7(994)408-02-29'),
+(3, 'Рыбакова Арина Данииловна', '7(902)429-11-28'),
+(4, 'Сергеев Денис Михайлович', '7(904)206-97-30'),
+(5, 'Дубова Виктория Егоровна', '7(968)408-63-57');
 
 -- --------------------------------------------------------
 
@@ -84,8 +91,13 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`id_order`, `cheque_id`, `customer_id`, `o_dataOrder`, `o_dateCompletion`, `o_readiness`, `o_issuingOrder`) VALUES
-(1, 1, 1, '2023-03-02 12:00:00', '2023-03-15 12:00:00', b'0', b'0'),
-(2, 3, 2, '2023-03-02 12:00:00', '2023-03-15 12:00:00', b'0', b'0');
+(1, 1, 1, '2023-03-02 12:08:00', '2023-03-15 12:00:00', b'1', b'1'),
+(2, 2, 2, '2023-03-02 15:13:00', '2023-03-15 10:00:00', b'0', b'0'),
+(3, 3, 3, '2023-03-17 10:09:00', '2023-03-20 12:00:00', b'1', b'0'),
+(4, 4, 4, '2023-03-02 13:23:00', '2023-03-13 15:00:00', b'1', b'0'),
+(5, 5, 3, '2023-03-16 11:34:00', '2023-03-21 13:00:00', b'0', b'0'),
+(6, 6, 5, '2023-03-10 16:01:00', '2023-03-25 11:00:00', b'0', b'0'),
+(7, 7, 1, '2023-03-12 15:55:00', '2023-03-28 12:00:00', b'0', b'0');
 
 -- --------------------------------------------------------
 
@@ -178,19 +190,19 @@ ALTER TABLE `typeservices`
 -- AUTO_INCREMENT для таблицы `cheque`
 --
 ALTER TABLE `cheque`
-  MODIFY `id_cheque` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_cheque` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id_customer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_customer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `order`
 --
 ALTER TABLE `order`
-  MODIFY `id_order` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_order` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `rate`

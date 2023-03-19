@@ -23,10 +23,6 @@
         gap: 55px;
         @extend %link-order;
         cursor: pointer;
-        li {
-            transition: color 300ms linear;
-            color: $link-text;
-        }
         li:hover, &_active {
             color: $light-text;
         }

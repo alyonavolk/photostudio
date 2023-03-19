@@ -6,7 +6,7 @@ import { api } from '../../resources/config';
 import { defOrderCustomer } from '../../resources/defaultObject';
 import { MODAL } from '../../resources/Routes';
 
-const ModalCheque = ({close, content, modal, id, ...data}) => {
+const ModalCheque = ({close, content, modal, id}) => {
     const [orderCustomer, setOrderCustomer] =  useState(defOrderCustomer);
 
     useEffect(() => {
